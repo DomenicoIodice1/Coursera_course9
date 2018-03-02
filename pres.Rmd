@@ -1,0 +1,60 @@
+---
+title       : Introduction to Shiny Application and Reproducible Pitch
+subtitle    : Coursera Peer-graded Assignment
+author      : Domenico Iodice
+job         : 02/03/2018
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+widgets     : []            # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+---
+
+## Introduction
+
+I am using Slidify to prepare a reproducible pitch presentation about my simple application created with Shiny.
+
+The app consists in the extimation of carats of diamonds by price and type of cut.
+  
+The app is published on https://domenicoiodice.shinyapps.io/coursera9/ website and all the documentations on https://github.com/DomenicoIodice1/Coursera_course9 repository.
+
+--- .class #id 
+
+## Dataset
+
+Dataset used is "diamonds" from ggplot2 package.
+  
+It was first subset for data used in the analysis and then created the interactive plot.
+
+--- .class #id
+
+## Data used
+
+Data used for the shiny app are stored in the columns "carat", "cut" and "price". Carat and Price contain numerical values, cut, instead, logical values.
+  
+    
+Price goes from a minimum of 326 to 18823 dollars, while carat from 0.20 to 5.01. Cut is devided in Fair, Good, Very Good, Premium and Ideal cathegories.
+
+--- .class #id
+
+## Code
+
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+library(shiny) 
+library(ggplot2)
+library(dplyr)
+library(rsconnect)
+diamonds_subset <- diamonds[,c(1,5,7)]
+Linear_fitting <- lm(carat~price, diamonds_subset)
+#estimation <- predict(Linear_fitting, newdata = data.frame(price = input$price,cut = input$cut))
+#GGPLOT
+ggplot <- ggplot(data=diamonds_subset, aes(x=price, y=carat))+
+  geom_point(aes(color = cut), alpha = 0.5)+
+  geom_smooth(method = "lm")+
+  #geom_vline(xintercept = input$price, color = "orange")+
+  #geom_hline(yintercept = estimation, color = "red", size = 2)+
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 20))+
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 15))
+```
+
